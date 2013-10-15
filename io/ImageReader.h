@@ -9,18 +9,20 @@ class ImageReader : public pipeline::SimpleProcessNode<> {
 public:
 
 	ImageReader(std::string filename);
-
-private:
-
-	void updateOutputs();
-
-	/**
+	
+protected:
+		/**
 	 * Reads the image.
 	 */
 	void readImage();
 
 	// the output image
 	pipeline::Output<Image> _image;
+	
+
+private:
+
+	void updateOutputs();
 
 	// the name of the file to read
 	std::string _filename;
