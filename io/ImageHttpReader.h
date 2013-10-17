@@ -3,21 +3,19 @@
 
 #include <pipeline/all.h>
 #include <imageprocessing/Image.h>
+#include "ImageReader.h"
 
-class ImageHttpReader : public pipeline::SimpleProcessNode<>
+class ImageHttpReader : public ImageReader
 {
 
 public:
     ImageHttpReader(std::string url);
 
-private:
+protected:
     void readImage();
-    
-    pipeline::Output<Image> _image;
 
+private:
     std::string _url;
-    
-    void updateOutputs();
 };
 
 #endif //PIPELINE_IMAGE_HTTP_READER_H__

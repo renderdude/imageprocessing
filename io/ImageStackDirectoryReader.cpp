@@ -1,6 +1,6 @@
 #include <imageprocessing/Image.h>
 #include <imageprocessing/ImageStack.h>
-#include <imageprocessing/io/ImageReader.h>
+#include <imageprocessing/io/ImageFileReader.h>
 #include "ImageStackDirectoryReader.h"
 
 logger::LogChannel imagestackdirectoryreaderlog("imagestackdirectoryreaderlog", "[ImageStackDirectoryReader] ");
@@ -37,7 +37,7 @@ ImageStackDirectoryReader::ImageStackDirectoryReader(const std::string& director
 			LOG_DEBUG(imagestackdirectoryreaderlog) << "creating reader for " << file << std::endl;
 
 			// add an input to the stack assembler
-			boost::shared_ptr<ImageReader> reader = boost::make_shared<ImageReader>(file.string());
+			boost::shared_ptr<ImageFileReader> reader = boost::make_shared<ImageFileReader>(file.string());
 
 			_stackAssembler->addInput(reader->getOutput());
 		}

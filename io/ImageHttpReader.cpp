@@ -1,6 +1,7 @@
 
 #include <util/httpclient.h>
 #include <ImageMagick/Magick++.h>
+#include <util/Logger.h>
 #include "ImageHttpReader.h"
 
 logger::LogChannel imagehttpreaderlog("imagehttpreaderlog", "[ImageHttpReader] ");
@@ -8,13 +9,7 @@ logger::LogChannel imagehttpreaderlog("imagehttpreaderlog", "[ImageHttpReader] "
 ImageHttpReader::ImageHttpReader(std::string url) :
     _url(url)
 {
-    registerOutput(_image, "image");
-}
-
-void
-ImageHttpReader::updateOutputs() {
-
-	readImage();
+    
 }
 
 void
@@ -42,13 +37,6 @@ ImageHttpReader::readImage()
     boost::shared_ptr<std::vector<float> > pixelVector = boost::make_shared<std::vector<float> >(w * h, 0);
     
     LOG_DEBUG(imagehttpreaderlog) << "Image is size " << w << " by " << h << std::endl;
-    
-    // Set image to grayscale
-    //image.type(Magick::GrayscaleType);
-    LOG_DEBUG(imagehttpreaderlog) << "Gray image?" << std::endl;
-    //image.modifyImage();
-    //image.syncPixels();
-    LOG_DEBUG(imagehttpreaderlog) << "Getting pixels" << std::endl;
     
     // Get a pixel reference
     pixels = image.getPixels(0, 0, w, h);

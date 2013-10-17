@@ -6,15 +6,14 @@
 
 class ImageReader : public pipeline::SimpleProcessNode<> {
 
-public:
 
-	ImageReader(std::string filename);
-	
 protected:
-		/**
+	ImageReader();
+
+	/**
 	 * Reads the image.
 	 */
-	void readImage();
+	virtual void readImage() = 0;
 
 	// the output image
 	pipeline::Output<Image> _image;
@@ -24,11 +23,6 @@ private:
 
 	void updateOutputs();
 
-	// the name of the file to read
-	std::string _filename;
-
-	// the image data
-	vigra::MultiArray<2, float> _imageData;
 };
 
 #endif // PIPELINE_IMAGE_READER_H__
