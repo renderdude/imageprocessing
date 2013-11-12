@@ -5,6 +5,7 @@
 #include "ImageBlockReader.h"
 #include <boost/shared_ptr.hpp>
 #include <imageprocessing/ImageCrop.h>
+#include <pipeline/all.h>
 
 class ImageBlockFileReader : public ImageBlockReader
 {

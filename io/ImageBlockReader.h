@@ -2,7 +2,7 @@
 #define IMAGE_BLOCK_READER_H__
 
 #include "ImageReader.h"
-#include <catmaid-sopnet/Block.h>
+#include <catmaidsopnet/Block.h>
 #include <pipeline/all.h>
 
 class ImageBlockReader : public ImageReader {
