@@ -5,11 +5,12 @@
 
 logger::LogChannel imageblockstackreaderlog("imageblockstackreaderlog", "[ImageBlockStackReader] ");
 
-ImageBlockStackReader::ImageBlockStackReader(boost::shared_ptr<ImageBlockFactory> blockFactory)
-{
-	_blockFactory = blockFactory;
+ImageBlockStackReader::ImageBlockStackReader()
+{	
 	_stackAssembler = boost::make_shared<StackAssembler>();
 	registerInput(_block, "block");
+	registerInput(_blockFactory, "factory");
+	
 	_block.registerBackwardCallback(&ImageBlockStackReader::onBlockModified, this);
 
 	// expose the result of the stack assembler

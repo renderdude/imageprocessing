@@ -15,7 +15,7 @@
 class ImageBlockStackReader : public pipeline::ProcessNode
 {
 public:
-	ImageBlockStackReader(boost::shared_ptr<ImageBlockFactory> blockFactory);
+	ImageBlockStackReader();
 	
 private:
 	//Like in ImageStackDirectoryReader
@@ -44,8 +44,7 @@ private:
 	boost::shared_ptr<StackAssembler> _stackAssembler;
 	
 	pipeline::Input<Block> _block;
-	
-	boost::shared_ptr<ImageBlockFactory> _blockFactory;
+	pipeline::Input<ImageBlockFactory> _blockFactory;
 };
 
 #endif //IMAGE_BLOCK_STACK_READER_H__
