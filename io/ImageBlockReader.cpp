@@ -1,6 +1,7 @@
 #include "ImageBlockReader.h"
 
-ImageBlockReader::ImageBlockReader(unsigned int n) : _sectionId(n)
+ImageBlockReader::ImageBlockReader()
 {
     registerInput(_block, "block");
+	registerInput(_sectionId, "section");
 }

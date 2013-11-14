@@ -8,11 +8,12 @@
 class ImageBlockReader : public ImageReader {
 
 protected:
-    ImageBlockReader(unsigned int n);
+    ImageBlockReader();
 
     pipeline::Input<Block> _block;
 
-    unsigned int _sectionId;
+	pipeline::Input<unsigned int> _sectionId;
+    //unsigned int _sectionId;
 
 };
 
