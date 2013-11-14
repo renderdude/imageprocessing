@@ -5,7 +5,7 @@
 
 logger::LogChannel imageblockstackreaderlog("imageblockstackreaderlog", "[ImageBlockStackReader] ");
 
-ImageBlockStackReader::ImageBlockStackReader(ImageBlockFactory *blockFactory)
+ImageBlockStackReader::ImageBlockStackReader(boost::shared_ptr<ImageBlockFactory> blockFactory)
 {
 	_blockFactory = blockFactory;
 	_stackAssembler = boost::make_shared<StackAssembler>();
@@ -50,12 +50,16 @@ ImageBlockStackReader::onBlockModified(const pipeline::Modified&)
 	_blockReaders.clear();
 	LOG_DEBUG(imageblockstackreaderlog) << "Clear stack assembler inputs" << std::endl; 
 	_stackAssembler->clearInputs(0);
-	for (int z = minZ; z < maxZ; ++z)
+	for (unsigned int z = minZ; z < maxZ; ++z)
 	{
 		LOG_DEBUG(imageblockstackreaderlog) << "Adding input for z " << z << std::endl; 
+		boost::shared_ptr<pipeline::Wrap<unsigned int> > wrapZ = 
+			boost::make_shared<pipeline::Wrap<unsigned int> >(z);
 		boost::shared_ptr<ImageBlockReader> reader = _blockFactory->getReader(z);
 		_blockReaders.push_back(reader);
 		reader->setInput("block", _block);
+		
+		reader->setInput("section", wrapZ);
 		_stackAssembler->addInput(reader->getOutput("image"));
 	}	
 }

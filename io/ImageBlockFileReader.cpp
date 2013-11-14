@@ -65,9 +65,5 @@ boost::shared_ptr<ImageBlockReader>
 ImageBlockFileFactory::getReader(int n)
 {
 	LOG_DEBUG(imageblockfilereaderlog) << "For file " << n << " returning path " << _sortedPaths[n].string() << std::endl;
-	boost::shared_ptr<ImageBlockFileReader> reader = boost::make_shared<ImageBlockFileReader>(_sortedPaths[n].string());
-	boost::shared_ptr<pipeline::Wrap<int> > wrapN = 
-		boost::make_shared<pipeline::Wrap<int> >(n);
-	reader->setInput("section", wrapN);
-	return reader;
+	return boost::make_shared<ImageBlockFileReader>(_sortedPaths[n].string());
 }
