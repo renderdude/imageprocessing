@@ -16,13 +16,13 @@ ImageBlockFileReader::readImage()
 {
     pipeline::Value<Image> cropped;
     boost::shared_ptr<pipeline::Wrap<int> > x =
-        boost::make_shared<pipeline::Wrap<int> >(_block->xMin());
+        boost::make_shared<pipeline::Wrap<int> >(_block->location()->x);
     boost::shared_ptr<pipeline::Wrap<int> > y =
-        boost::make_shared<pipeline::Wrap<int> >(_block->yMin());
+        boost::make_shared<pipeline::Wrap<int> >(_block->location()->y);
     boost::shared_ptr<pipeline::Wrap<int> > w =
-        boost::make_shared<pipeline::Wrap<int> >(_block->width());
+        boost::make_shared<pipeline::Wrap<int> >(_block->size()->x);
     boost::shared_ptr<pipeline::Wrap<int> > h =
-        boost::make_shared<pipeline::Wrap<int> >(_block->height());
+        boost::make_shared<pipeline::Wrap<int> >(_block->size()->y);
 
 	_imageCrop = boost::make_shared<ImageCrop>();
     _imageCrop->setInput("image", _fileReader->getOutput("image"));

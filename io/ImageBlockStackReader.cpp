@@ -45,8 +45,8 @@ void
 ImageBlockStackReader::onBlockModified(const pipeline::Modified&)
 {
 	LOG_DEBUG(imageblockstackreaderlog) << "Got block modified" << std::endl;
-	int minZ = _block->zMin();
-	int maxZ = minZ + _block->depth();
+	int minZ = _block->location()->z;
+	int maxZ = minZ + _block->size()->z;
 	LOG_DEBUG(imageblockstackreaderlog) << "Clear readers" << std::endl;
 	_blockReaders.clear();
 	LOG_DEBUG(imageblockstackreaderlog) << "Clear stack assembler inputs" << std::endl; 
