@@ -9,7 +9,7 @@
 #include <pipeline/all.h>
 #include <imageprocessing/Image.h>
 #include <imageprocessing/ImageStack.h>
-#include <catmaidsopnet/Block.h>
+#include <sopnet/sopnet/block/Block.h>
 #include <imageprocessing/io/ImageBlockFactory.h>
 
 class ImageBlockStackReader : public pipeline::ProcessNode
