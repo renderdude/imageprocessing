@@ -12,39 +12,28 @@
 #include <sopnet/sopnet/block/Block.h>
 #include <imageprocessing/io/ImageBlockFactory.h>
 
-class ImageBlockStackReader : public pipeline::ProcessNode
+class ImageBlockStackReader : public pipeline::SimpleProcessNode<>
 {
 public:
 	ImageBlockStackReader();
 	
 private:
-	//Like in ImageStackDirectoryReader
-	class StackAssembler : public pipeline::SimpleProcessNode<>
-	{
-
-	public:
-
-		StackAssembler();
-
-	private:
-
-		void updateOutputs();
-
-		pipeline::Inputs<Image> _images;
-
-		pipeline::Output<ImageStack> _stack;
-	};
-
-	//void updateOutputs();
 	
 	void onBlockModified(const pipeline::Modified&);
+	
+	void onFactoryModified(const pipeline::Modified&);
 
+	void setup();
+	
+	void updateOutputs();
+	
 	std::vector<boost::shared_ptr<ImageBlockReader> > _blockReaders;
 	
-	boost::shared_ptr<StackAssembler> _stackAssembler;
-	
+	pipeline::Inputs<Image> _images;
 	pipeline::Input<Block> _block;
 	pipeline::Input<ImageBlockFactory> _blockFactory;
+	
+	pipeline::Output<ImageStack> _stack;
 };
 
 #endif //IMAGE_BLOCK_STACK_READER_H__

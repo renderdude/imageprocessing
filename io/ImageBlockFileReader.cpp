@@ -14,6 +14,8 @@ ImageBlockFileReader::ImageBlockFileReader(std::string filename)
 void
 ImageBlockFileReader::readImage()
 {
+	LOG_DEBUG(imageblockfilereaderlog) << "reading cropped image" << std::endl;
+	
     pipeline::Value<Image> cropped;
     boost::shared_ptr<pipeline::Wrap<int> > x =
         boost::make_shared<pipeline::Wrap<int> >(_block->location()->x);
@@ -25,15 +27,19 @@ ImageBlockFileReader::readImage()
         boost::make_shared<pipeline::Wrap<int> >(_block->size()->y);
 
 	_imageCrop = boost::make_shared<ImageCrop>();
+	LOG_DEBUG(imageblockfilereaderlog) << "Created ImageCrop, setting things up" << std::endl;
     _imageCrop->setInput("image", _fileReader->getOutput("image"));
     _imageCrop->setInput("x", x);
     _imageCrop->setInput("y", y);
     _imageCrop->setInput("width", w);
     _imageCrop->setInput("height", h);
 
+	LOG_DEBUG(imageblockfilereaderlog) << "Getting cropped output" << std::endl;
     cropped = _imageCrop->getOutput("cropped image");
    
+	LOG_DEBUG(imageblockfilereaderlog) << "Pointer magic" << std::endl;
     *_image = *cropped;
+	LOG_DEBUG(imageblockfilereaderlog) << "done reading" << std::endl;
 }
 
 ImageBlockFileFactory::ImageBlockFileFactory(const std::string& directory)
