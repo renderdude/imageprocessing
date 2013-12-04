@@ -78,6 +78,13 @@ public:
 	 * @return The intersection of this and another component.
 	 */
 	ConnectedComponent intersect(const ConnectedComponent& other);
+	
+	/**
+	 * Causes this ConnectedComponent to recompute its bounding box.
+	 * This is useful subsequent to a translation or other transformation of
+	 * the underlying pixels.
+	 */
+	void recomputeBoundingBox();
 
 private:
 

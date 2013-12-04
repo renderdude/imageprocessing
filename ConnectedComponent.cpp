@@ -22,8 +22,20 @@ ConnectedComponent::ConnectedComponent(
 	_begin(_pixels->begin() + begin),
 	_end(_pixels->begin() + end) {
 
+	recomputeBoundingBox();
+
+	_bitmap.reshape(bitmap_type::size_type(_boundingBox.width(), _boundingBox.height()), false);
+
+	foreach (const util::point<int>& pixel, getPixels())
+		_bitmap(pixel.x - _boundingBox.minX, pixel.y - _boundingBox.minY) = true;
+}
+
+void
+ConnectedComponent::recomputeBoundingBox()
+{
 	// if there is at least one pixel
-	if (begin != end) {
+	if (getSize())
+	{
 
 		_boundingBox.minX = _begin->x;
 		_boundingBox.maxX = _begin->x + 1;
@@ -42,12 +54,8 @@ ConnectedComponent::ConnectedComponent(
 	}
 
 	_center /= getSize();
-
-	_bitmap.reshape(bitmap_type::size_type(_boundingBox.width(), _boundingBox.height()), false);
-
-	foreach (const util::point<int>& pixel, getPixels())
-		_bitmap(pixel.x - _boundingBox.minX, pixel.y - _boundingBox.minY) = true;
 }
+
 
 double
 ConnectedComponent::getValue() const {
