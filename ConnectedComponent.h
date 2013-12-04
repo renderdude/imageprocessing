@@ -72,6 +72,13 @@ public:
 	bool operator<(const ConnectedComponent& other) const;
 
 	/**
+	 * Create a ConnectedComponent that is the translation of this one.
+	 * @param pt the point representing the translation vector.
+	 * @return The translation of this ConnectedComponent by pt.
+	 */
+	ConnectedComponent translate(const util::point<unsigned int>& pt);
+	
+	/**
 	 * Intersect this connected component with another one.	 *
 	 *
 	 * @param other The component to intersect with.

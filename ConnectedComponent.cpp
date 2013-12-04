@@ -98,6 +98,20 @@ ConnectedComponent::operator<(const ConnectedComponent& other) const {
 }
 
 ConnectedComponent
+ConnectedComponent::translate(const util::point<unsigned int>& pt)
+{
+	boost::shared_ptr<pixel_list_type> translation = boost::make_shared<pixel_list_type>();
+	
+	foreach (const util::point<unsigned int>& pixel, getPixels())
+	{
+		translation->push_back(pixel + pt);
+	}
+	
+	return ConnectedComponent(_source, _value, translation, 0, translation->size());
+}
+
+
+ConnectedComponent
 ConnectedComponent::intersect(const ConnectedComponent& other) {
 
 	boost::shared_ptr<pixel_list_type> intersection = boost::make_shared<pixel_list_type>();
