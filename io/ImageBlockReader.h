@@ -2,7 +2,7 @@
 #define IMAGE_BLOCK_READER_H__
 
 #include "ImageReader.h"
-#include <sopnet/sopnet/block/Block.h>
+#include <sopnet/sopnet/block/Box.h>
 #include <pipeline/all.h>
 
 class ImageBlockReader : public ImageReader {
@@ -10,7 +10,7 @@ class ImageBlockReader : public ImageReader {
 protected:
     ImageBlockReader();
 
-    pipeline::Input<Block> _block;
+    pipeline::Input<Box<unsigned int> > _block;
 
 	pipeline::Input<unsigned int> _sectionId;
     //unsigned int _sectionId;
