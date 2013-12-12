@@ -85,6 +85,13 @@ public:
 	 * @return The intersection of this and another component.
 	 */
 	ConnectedComponent intersect(const ConnectedComponent& other);
+	
+	/**
+	 * Test equality of this ConnectedComponent against another by geometry.
+	 */
+	bool operator==(const ConnectedComponent& other) const;
+	
+	std::size_t getHashValue();
 
 private:
 
@@ -112,6 +119,9 @@ private:
 	// a binary map of the size of the bounding box to indicate which pixels
 	// belong to this component
 	bitmap_type _bitmap;
+	
+	// the cached hash value of this ConnectedComponent.
+	size_t _hashValue;
 };
 
 #endif // IMAGEPROCESSING_CONNECTED_COMPONENT_H__

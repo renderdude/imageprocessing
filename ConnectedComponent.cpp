@@ -1,5 +1,6 @@
 #include <boost/make_shared.hpp>
 
+#include <boost/functional/hash.hpp>
 #include <imageprocessing/exceptions.h>
 #include "ConnectedComponent.h"
 
@@ -20,7 +21,8 @@ ConnectedComponent::ConnectedComponent(
 	_center(0, 0),
 	_source(source),
 	_begin(_pixels->begin() + begin),
-	_end(_pixels->begin() + end) {
+	_end(_pixels->begin() + end),
+	_hashValue(0) {
 
 	// if there is at least one pixel
 	if (begin != end) {
@@ -133,3 +135,65 @@ ConnectedComponent::intersect(const ConnectedComponent& other) {
 
 	return ConnectedComponent(_source, _value, intersection, 0, intersection->size());
 }
+
+bool
+ConnectedComponent::operator==(const ConnectedComponent& other) const
+{
+	util::rect<int> thisBound = getBoundingBox();
+	util::rect<int> otherBound = other.getBoundingBox();
+	if (thisBound == otherBound)
+	{
+		// If this bound equals that bound
+		bitmap_type thisBitmap = getBitmap();
+		bitmap_type otherBitmap = other.getBitmap();
+		
+		//Check that the other's bitmap contains all of our pixels.
+		foreach (const util::point<unsigned int> pixel, getPixels())
+		{
+			if (!otherBitmap(pixel.x - thisBound.minX, pixel.y - thisBound.minY))
+			{
+				return false;
+			}
+		}
+		
+		//Check that our bitmap contains all of the other's pixels.
+		foreach (const util::point<unsigned int> pixel, other.getPixels())
+		{
+			if (!thisBitmap(pixel.x - otherBound.minX, pixel.y - otherBound.minY))
+			{
+				return false;
+			}
+		}
+		
+		//If both conditions are true, both components contain each other, and are therefore equal.
+		return true;
+	}
+	else
+	{
+		// If our bound is unequal to the other's bound, then we're unequal.
+		return false;
+	}
+}
+
+std::size_t
+ConnectedComponent::getHashValue()
+{
+	if (_hashValue == 0)
+	{
+		std::size_t seed = 0;
+		boost::hash_combine(seed, boost::hash_value(_boundingBox.minX));
+		boost::hash_combine(seed, boost::hash_value(_boundingBox.minY));
+		boost::hash_combine(seed, boost::hash_value(_boundingBox.maxX));
+		boost::hash_combine(seed, boost::hash_value(_boundingBox.maxY));
+		
+		foreach (util::point<unsigned int> point, getPixels())
+		{
+			boost::hash_combine(seed, boost::hash_value(point.x));
+			boost::hash_combine(seed, boost::hash_value(point.y));
+		}
+		_hashValue = seed;
+	}
+	return _hashValue;
+}
+
+
