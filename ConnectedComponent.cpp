@@ -49,6 +49,19 @@ ConnectedComponent::ConnectedComponent(
 
 	foreach (const util::point<int>& pixel, getPixels())
 		_bitmap(pixel.x - _boundingBox.minX, pixel.y - _boundingBox.minY) = true;
+	
+	// Calculate geometric hash value
+	boost::hash_combine(_hashValue, boost::hash_value(_boundingBox.minX));
+	boost::hash_combine(_hashValue, boost::hash_value(_boundingBox.minY));
+	boost::hash_combine(_hashValue, boost::hash_value(_boundingBox.maxX));
+	boost::hash_combine(_hashValue, boost::hash_value(_boundingBox.maxY));
+	
+	foreach (util::point<unsigned int> point, getPixels())
+	{
+		boost::hash_combine(_hashValue, boost::hash_value(point.x));
+		boost::hash_combine(_hashValue, boost::hash_value(point.y));
+	}
+	
 }
 
 double
@@ -141,7 +154,7 @@ ConnectedComponent::operator==(const ConnectedComponent& other) const
 {
 	util::rect<int> thisBound = getBoundingBox();
 	util::rect<int> otherBound = other.getBoundingBox();
-	if (thisBound == otherBound)
+	if (_hashValue == other.getHashValue() && thisBound == otherBound)
 	{
 		// If this bound equals that bound
 		bitmap_type thisBitmap = getBitmap();
@@ -176,23 +189,8 @@ ConnectedComponent::operator==(const ConnectedComponent& other) const
 }
 
 std::size_t
-ConnectedComponent::getHashValue()
+ConnectedComponent::getHashValue() const
 {
-	if (_hashValue == 0)
-	{
-		std::size_t seed = 0;
-		boost::hash_combine(seed, boost::hash_value(_boundingBox.minX));
-		boost::hash_combine(seed, boost::hash_value(_boundingBox.minY));
-		boost::hash_combine(seed, boost::hash_value(_boundingBox.maxX));
-		boost::hash_combine(seed, boost::hash_value(_boundingBox.maxY));
-		
-		foreach (util::point<unsigned int> point, getPixels())
-		{
-			boost::hash_combine(seed, boost::hash_value(point.x));
-			boost::hash_combine(seed, boost::hash_value(point.y));
-		}
-		_hashValue = seed;
-	}
 	return _hashValue;
 }
 

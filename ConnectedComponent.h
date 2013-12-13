@@ -91,7 +91,7 @@ public:
 	 */
 	bool operator==(const ConnectedComponent& other) const;
 	
-	std::size_t getHashValue();
+	std::size_t getHashValue() const;
 
 private:
 
