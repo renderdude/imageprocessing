@@ -86,6 +86,8 @@ public:
 	 */
 	ConnectedComponent intersect(const ConnectedComponent& other);
 	
+	bool intersects(const ConnectedComponent& other);
+	
 	/**
 	 * Test equality of this ConnectedComponent against another by geometry.
 	 */

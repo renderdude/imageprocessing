@@ -149,6 +149,34 @@ ConnectedComponent::intersect(const ConnectedComponent& other) {
 	return ConnectedComponent(_source, _value, intersection, 0, intersection->size());
 }
 
+bool ConnectedComponent::intersects(const ConnectedComponent& other)
+{
+	if (_boundingBox.intersects(other.getBoundingBox()))
+	{
+		bitmap_type::size_type size = _bitmap.shape();
+
+		foreach (const util::point<unsigned int>& pixel, other.getPixels())
+		{
+			if (_boundingBox.contains(pixel)) {
+
+				unsigned int x = pixel.x - _boundingBox.minX;
+				unsigned int y = pixel.y - _boundingBox.minY;
+
+				if (x >= size[0] || y >= size[1])
+					continue;
+
+				if (_bitmap(x, y))
+				{
+					return true;
+				}
+			}
+		}
+	}
+	
+	return false;
+}
+
+
 bool
 ConnectedComponent::operator==(const ConnectedComponent& other) const
 {
