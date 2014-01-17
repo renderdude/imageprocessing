@@ -221,5 +221,3 @@ ConnectedComponent::getHashValue() const
 {
 	return _hashValue;
 }
-
-

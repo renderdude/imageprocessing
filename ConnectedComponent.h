@@ -123,8 +123,15 @@ private:
 	bitmap_type _bitmap;
 	
 	// the cached hash value of this ConnectedComponent.
-	size_t _hashValue;
+	std::size_t _hashValue;
 };
+
+inline std::size_t hash_value(const ConnectedComponent& component)
+{
+	return component.getHashValue();
+}
+
+
 
 #endif // IMAGEPROCESSING_CONNECTED_COMPONENT_H__
 
