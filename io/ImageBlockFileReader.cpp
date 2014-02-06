@@ -17,14 +17,10 @@ ImageBlockFileReader::readImage()
 	LOG_DEBUG(imageblockfilereaderlog) << "reading cropped image" << std::endl;
 	
     pipeline::Value<Image> cropped;
-    boost::shared_ptr<pipeline::Wrap<int> > x =
-        boost::make_shared<pipeline::Wrap<int> >(_block->location().x);
-    boost::shared_ptr<pipeline::Wrap<int> > y =
-        boost::make_shared<pipeline::Wrap<int> >(_block->location().y);
-    boost::shared_ptr<pipeline::Wrap<int> > w =
-        boost::make_shared<pipeline::Wrap<int> >(_block->size().x);
-    boost::shared_ptr<pipeline::Wrap<int> > h =
-        boost::make_shared<pipeline::Wrap<int> >(_block->size().y);
+	pipeline::Value<int> x(_block->location().x);
+    pipeline::Value<int> y(_block->location().y);
+    pipeline::Value<int> w(_block->size().x);
+    pipeline::Value<int> h(_block->size().y);
 
 	_imageCrop = boost::make_shared<ImageCrop>();
 	LOG_DEBUG(imageblockfilereaderlog) << "Created ImageCrop, setting things up" << std::endl;

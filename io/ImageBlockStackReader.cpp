@@ -1,3 +1,4 @@
+#include <pipeline/Value.h>
 #include <imageprocessing/Image.h>
 #include <imageprocessing/ImageStack.h>
 #include <imageprocessing/io/ImageBlockFileReader.h>
@@ -73,8 +74,7 @@ ImageBlockStackReader::setup()
 		for (unsigned int z = minZ; z < maxZ; ++z)
 		{
 			LOG_DEBUG(imageblockstackreaderlog) << "Adding input for z " << z << std::endl; 
-			boost::shared_ptr<pipeline::Wrap<unsigned int> > wrapZ = 
-				boost::make_shared<pipeline::Wrap<unsigned int> >(z);
+			pipeline::Value<unsigned int> wrapZ(z);
 			boost::shared_ptr<ImageBlockReader> reader = _blockFactory->getReader(z);
 			_blockReaders.push_back(reader);
 			reader->setInput("block", _block);
