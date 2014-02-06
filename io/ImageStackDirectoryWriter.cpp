@@ -1,4 +1,5 @@
 #include <boost/lexical_cast.hpp>
+#include <boost/filesystem.hpp>
 #include <vigra/impex.hxx>
 
 #include <util/Logger.h>
@@ -53,6 +54,11 @@ ImageStackDirectoryWriter::write(std::string basename) {
 
 	boost::unique_lock<boost::shared_mutex> lock(_stack->getMutex());
 
+	boost::filesystem::path directory(_directory);
+
+	if (!boost::filesystem::exists(directory))
+		boost::filesystem::create_directory(directory);
+
 	// save to file
 
 	unsigned int i = 0;
@@ -63,8 +69,10 @@ ImageStackDirectoryWriter::write(std::string basename) {
 		number << std::setw(8) << std::setfill('0');
 		number << i;
 
-		std::string filename = _directory + "/" + _basename + basename + number.str() + ".png";
-		vigra::exportImage(vigra::srcImageRange(*image), vigra::ImageExportInfo(filename.c_str()));
+		// at least on Ubuntu 13.04, this maintains the exact values and does 
+		// not rescale
+		std::string filename = _directory + "/" + _basename + basename + number.str() + ".tif";
+		vigra::exportImage(vigra::srcImageRange(*image), vigra::ImageExportInfo(filename.c_str()).setPixelType("FLOAT"));
 
 		i++;
 	}

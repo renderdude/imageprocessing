@@ -9,7 +9,18 @@ class ImageStackPainter : public gui::Painter {
 
 public:
 
-	ImageStackPainter(unsigned int numImages = 1, bool showColored = true);
+	/**
+	 * Create a new image stack painter.
+	 *
+	 * @param numImages
+	 *             The number of images to show at the same time vertically 
+	 *             aligned.
+	 * @param gap
+	 *             The gap between the images shown.
+	 * @param showColored
+	 *             Show all images superimposed, each with a different color.
+	 */
+	ImageStackPainter(unsigned int numImages = 1, double gap = 0.0, bool showColored = true);
 
 	void setImageStack(boost::shared_ptr<ImageStack> stack);
 
@@ -34,6 +45,24 @@ public:
 	 */
 	void setColors(std::vector<float> reds, std::vector<float> greens, std::vector<float> blues);
 
+	/**
+	 * Set an annotation to show for the image stack.
+	 */
+	void setAnnotation(double x, double y, std::string annotation) {
+
+		_annotationX = x;
+		_annotationY = y;
+		_annotation  = annotation;
+	}
+
+	/**
+	 * Remove an annotation.
+	 */
+	void unsetAnnotation() {
+
+		_annotation = "";
+	}
+
 private:
 
 	// the whole stack
@@ -51,6 +80,9 @@ private:
 	// the height of the images to show
 	double _imageHeight;
 
+	// the gap between images to show
+	double _gap;
+
 	// show the images of the stack in a colored overlay
 	bool _showColored;
 
@@ -58,6 +90,10 @@ private:
 	std::vector<float> _reds;
 	std::vector<float> _greens;
 	std::vector<float> _blues;
+
+	double _annotationX;
+	double _annotationY;
+	std::string _annotation;
 };
 
 #endif // IMAGEPROCESSING_GUI_IMAGE_STACK_PAINTER_H__

@@ -13,19 +13,32 @@ class ImageStackView : public pipeline::SimpleProcessNode<> {
 
 public:
 
-	ImageStackView(unsigned int numImages = 1, bool showColored = false);
+	/**
+	 * Create a new image stack view.
+	 *
+	 * @param numImages
+	 *             The number of images to show at the same time vertically 
+	 *             aligned.
+	 * @param gap
+	 *             The gap between the images shown.
+	 * @param showColored
+	 *             Show all images superimposed, each with a different color.
+	 */
+	ImageStackView(unsigned int numImages = 1, double gap = 0.0, bool showColored = false);
 
 	/**
 	 * Set the first k numbers to color images in the stack. If there are
 	 * more images in the stack, they will be colored randomly.
 	 */
 	void setColors(std::vector<float> reds, std::vector<float> greens, std::vector<float> blues);
+
 private:
 
 	void updateOutputs();
 
 	void onKeyDown(gui::KeyDown& signal);
 	void onButtonDown(gui::MouseDown& signal);
+	void onMouseMove(gui::MouseMove& signal);
 
 	pipeline::Input<ImageStack>         _stack;
 	pipeline::Output<ImageStackPainter> _painter;

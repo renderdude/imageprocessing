@@ -2,13 +2,14 @@
 
 static logger::LogChannel imagestackpainterlog("imagestackpainterlog", "[ImageStackPainter] ");
 
-ImageStackPainter::ImageStackPainter(unsigned int numImages, bool showColored) :
+ImageStackPainter::ImageStackPainter(unsigned int numImages, double gap, bool showColored) :
 	_numImages(numImages),
 	_section(0),
+	_gap(gap),
 	_showColored(showColored) {
 
 	if (!_showColored)
-		for (int i = 0; i < _numImages; i++)
+		for (unsigned int i = 0; i < _numImages; i++)
 			_imagePainters.push_back(boost::make_shared<gui::ImagePainter<Image> >());
 }
 
@@ -26,7 +27,7 @@ ImageStackPainter::setImageStack(boost::shared_ptr<ImageStack> stack) {
 
 		_imagePainters.clear();
 
-		for (int i = 0; i < _stack->size(); i++) {
+		for (unsigned int i = 0; i < _stack->size(); i++) {
 
 			boost::shared_ptr<gui::ImagePainter<Image> > painter = boost::make_shared<gui::ImagePainter<Image> >();
 			painter->setImage((*_stack)[i]);
@@ -55,7 +56,7 @@ ImageStackPainter::setCurrentSection(unsigned int section) {
 
 	_section = std::min(section, _stack->size() - 1);
 
-	for (int i = 0; i < _numImages; i++) {
+	for (unsigned int i = 0; i < _numImages; i++) {
 
 		int imageIndex = std::max(std::min(static_cast<int>(_section) + static_cast<int>(i - _numImages/2), static_cast<int>(_stack->size()) - 1), 0);
 
@@ -69,8 +70,8 @@ ImageStackPainter::setCurrentSection(unsigned int section) {
 
 	_imageHeight = size.height();
 
-	size.minY -= _numImages/2*_imageHeight;
-	size.maxY += (_numImages/2 - (_numImages + 1)%2)*_imageHeight;
+	size.minY -= _numImages/2*_imageHeight + _numImages*_gap/2;
+	size.maxY += (_numImages/2 - (_numImages + 1)%2)*_imageHeight + _numImages*_gap/2;
 
 	setSize(size);
 
@@ -86,23 +87,30 @@ ImageStackPainter::draw(
 
 	if (_showColored) {
 
-		for (int i = 0; i < _stack->size(); i++) {
+		for (unsigned int i = 0; i < _stack->size(); i++) {
 
 			_imagePainters[i]->draw(roi, resolution);
 		}
 
 	} else {
 
-		for (int i = 0; i < _numImages; i++) {
+		for (unsigned int i = 0; i < _numImages; i++) {
 
-			int offset = i - _numImages/2;
+			double d = static_cast<int>(i - _numImages/2)*(_imageHeight + _gap);
 
-			glTranslated(0, -offset*_imageHeight, 0);
-
-			_imagePainters[i]->draw(roi - util::point<double>(static_cast<double>(0), -offset*_imageHeight), resolution);
-
-			glTranslated(0,  offset*_imageHeight, 0);
+			glTranslated(0, -d, 0);
+			_imagePainters[i]->draw(roi - util::point<double>(static_cast<double>(0), -d), resolution);
+			glTranslated(0,  d, 0);
 		}
+	}
+
+	if (_annotation != "") {
+
+		gui::TextPainter textPainter(_annotation);
+
+		glTranslatef( _annotationX,  _annotationY, 0.0f);
+		textPainter.draw(roi - util::point<double>(_annotationX, _annotationY), resolution);
+		glTranslatef(-_annotationX, -_annotationY, 0.0f);
 	}
 
 	return false;
