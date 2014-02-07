@@ -71,7 +71,7 @@ ImageBlockStackReader::setup()
 		_blockReaders.clear();
 		LOG_DEBUG(imageblockstackreaderlog) << "Clear stack assembler inputs" << std::endl; 
 		_stackAssembler->clearInputs(0);
-		for (unsigned int z = minZ; z < maxZ; ++z)
+		for (int z = minZ; z < maxZ; ++z)
 		{
 			LOG_DEBUG(imageblockstackreaderlog) << "Adding input for z " << z << std::endl; 
 			pipeline::Value<unsigned int> wrapZ(z);
