@@ -20,9 +20,6 @@ protected:
 private:
 	// the name of the file to read
 	std::string _filename;
-
-	// the image data
-	vigra::MultiArray<2, float> _imageData;
 };
 
 #endif // PIPELINE_IMAGE_FILE_READER_H__
