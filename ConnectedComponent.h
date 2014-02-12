@@ -94,9 +94,13 @@ public:
 	bool operator==(const ConnectedComponent& other) const;
 	
 	std::size_t getHashValue() const;
+	
+	std::size_t generateHash() const;
 
 private:
 
+
+	
 	// a list of pixel locations that belong to this component (can be shared
 	// between the connected components)
 	boost::shared_ptr<pixel_list_type> _pixels;
