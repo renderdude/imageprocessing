@@ -34,7 +34,7 @@ ImageHttpReader::readImage()
     // Get the size of the image.
     int w = image.columns(), h = image.rows();
     // We'll push the image values to this in a second.
-    boost::shared_ptr<std::vector<float> > pixelVector = boost::make_shared<std::vector<float> >(w * h, 0);
+	_image->reshape(w, h);
     
     LOG_DEBUG(imagehttpreaderlog) << "Image is size " << w << " by " << h << std::endl;
     
@@ -48,11 +48,6 @@ ImageHttpReader::readImage()
         Magick::Color color = pixels[i];
         Magick::ColorGray gColor = color;
         double dval = gColor.shade();
-        (*pixelVector)[i] = (float)dval;
+        (*_image)[i] = (float)dval;
     }
-    
-    LOG_DEBUG(imagehttpreaderlog) << "Creating image object" << std::endl;
-    
-    *_image = Image(w, h, pixelVector);
-    
 }
