@@ -22,7 +22,6 @@ protected:
 private:
 
 	void updateOutputs();
-
 };
 
 #endif // PIPELINE_IMAGE_READER_H__

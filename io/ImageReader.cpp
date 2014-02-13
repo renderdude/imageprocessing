@@ -14,4 +14,3 @@ ImageReader::updateOutputs() {
 	LOG_DEBUG(imagereaderlog) << "Updating outputs" << std::endl;
 	readImage();
 }
-
