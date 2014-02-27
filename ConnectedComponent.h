@@ -93,10 +93,7 @@ public:
 	 */
 	bool operator==(const ConnectedComponent& other) const;
 	
-	std::size_t getHashValue() const;
-	
-	std::size_t generateHash() const;
-
+	std::size_t hashValue() const;
 private:
 
 
@@ -132,7 +129,7 @@ private:
 
 inline std::size_t hash_value(const ConnectedComponent& component)
 {
-	return component.getHashValue();
+	return component.hashValue();
 }
 
 
