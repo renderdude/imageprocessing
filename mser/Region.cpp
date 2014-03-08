@@ -196,7 +196,7 @@ Region::isStable() {
 
 	if (_history == 0) {
 
-		LOG_ALL(mserregionlog) << "[Region] I am unstable (I have no history)" << std::endl;
+		LOG_ALL(mserregionlog) << "[Region] I am stable (I have no history)" << std::endl;
 
 		return true;
 	}
@@ -206,7 +206,7 @@ Region::isStable() {
 
 	// change in variation?
 	bool dvar     = (_variation < var || _history->value + 1 < _value);
-	bool isStable = (dvar && !_varChanged && _variation < _parameters->maxVariation && div > _parameters->minDiversity);
+	bool isStable = _parameters->fullComponentTree || (dvar && !_varChanged && _variation < _parameters->maxVariation && div > _parameters->minDiversity);
 
 	if (isStable) {
 

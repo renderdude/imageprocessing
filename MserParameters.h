@@ -12,7 +12,8 @@ struct MserParameters : public pipeline::Data {
 		minDiversity(0.0),
 		darkToBright(true),
 		brightToDark(false),
-		sameIntensityComponents(false) {}
+		sameIntensityComponents(false),
+		fullComponentTree(false) {}
 
 	// increase of the intensity level to check for stability
 	int delta;
@@ -35,6 +36,10 @@ struct MserParameters : public pipeline::Data {
 
 	// extract only components of same intensity
 	bool sameIntensityComponents;
+
+	// consider every connected component within minArea and maxArea as stable 
+	// and thus extract the whole component tree
+	bool fullComponentTree;
 };
 
 #endif // IMAGEPROCESSING_MSER_PARAMETERS_H__
