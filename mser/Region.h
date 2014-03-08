@@ -25,8 +25,8 @@ public:
 			PixelList*               pixelList,
 			boost::shared_ptr<Image> source,
 			MserParameters*          parameters,
-			int                      head = PixelList::None,
-			int                      tail = PixelList::None);
+			int                      head = PixelList::Unassigned,
+			int                      tail = PixelList::Unassigned);
 
 	void setValue(int value);
 

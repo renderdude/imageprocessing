@@ -3,8 +3,8 @@
 namespace mser {
 
 Region::Region() :
-	_head(PixelList::None),
-	_tail(PixelList::None),
+	_head(PixelList::Unassigned),
+	_tail(PixelList::Unassigned),
 	_pixelList(0),
 	_history(0),
 	_value(0),
@@ -234,12 +234,12 @@ Region::addPosition(int index, const util::point<unsigned int>& position, int va
 
 		_pixelList->prev[index] = _tail;
 		_pixelList->next[_tail] = index;
-		_pixelList->next[index] = PixelList::None;
+		_pixelList->next[index] = PixelList::Unassigned;
 
 	} else {
 
-		_pixelList->prev[index] = PixelList::None;
-		_pixelList->next[index] = PixelList::None;
+		_pixelList->prev[index] = PixelList::Unassigned;
+		_pixelList->next[index] = PixelList::Unassigned;
 		_head = index;
 	}
 

@@ -3,13 +3,13 @@
 
 struct PixelList {
 
-	static const int None = -1;
+	static const int Unassigned = -1;
 
 	PixelList() {};
 
 	PixelList(int size) :
-		prev(size, None),
-		next(size, None) {}
+		prev(size, Unassigned),
+		next(size, Unassigned) {}
 
 	void resize(size_t size) {
 

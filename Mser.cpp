@@ -420,15 +420,15 @@ Mser<Precision>::createComponentTree() {
 	 */
 
 	// find the first and last pixel index
-	int begin = PixelList::None;
-	int end   = PixelList::None;
+	int begin = PixelList::Unassigned;
+	int end   = PixelList::Unassigned;
 
-	for (unsigned int i = 0; i < _pixelList.size() && (begin == PixelList::None || end == PixelList::None); i++) {
+	for (unsigned int i = 0; i < _pixelList.size() && (begin == PixelList::Unassigned || end == PixelList::Unassigned); i++) {
 
-		if (_pixelList.prev[i] == PixelList::None)
+		if (_pixelList.prev[i] == PixelList::Unassigned)
 			begin = i;
 
-		if (_pixelList.next[i] == PixelList::None)
+		if (_pixelList.next[i] == PixelList::Unassigned)
 			end= i;
 	}
 
