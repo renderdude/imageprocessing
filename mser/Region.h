@@ -12,7 +12,7 @@
 
 namespace mser {
 
-static logger::LogChannel mserregionlog("mserregionlog", "[Region] ");
+static logger::LogChannel mserregionlog("mserregionlog", "[Region] ", logger::Quiet);
 
 class Region {
 
