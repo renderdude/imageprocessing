@@ -7,21 +7,18 @@ ImageView::ImageView() {
 	registerInput(_image, "image");
 	registerOutput(_painter, "painter");
 
-	_image.registerBackwardCallback(&ImageView::onInputImageSet, this);
-	_painter.registerForwardSlot(_contentChanged);
-	_painter.registerForwardSlot(_sizeChanged);
+	_image.registerCallback(&ImageView::onInputImageSet, this);
+	_painter.registerSlot(_contentChanged);
+	_painter.registerSlot(_sizeChanged);
 }
 
 void
 ImageView::onInputImageSet(const pipeline::InputSet<Image>& /*signal*/) {
 
 	if (!_painter)
-		_painter.createData();
-
-	_painter->setImage(_image);
+		_painter = new ImagePainter<Image>();
 
 	LOG_ALL(imageviewlog) << "got a new input image -- sending SizeChanged" << std::endl;
-	LOG_ALL(imageviewlog) << "image has size: " << _painter->getSize() << std::endl;
 
 	_sizeChanged();
 }
@@ -35,8 +32,8 @@ ImageView::updateOutputs() {
 
 	LOG_ALL(imageviewlog) << "old size is " << oldSize << std::endl;
 
-	// explicitly update the painter
-	_painter->update();
+	// update the painter
+	_painter->setImage(_image);
 
 	util::rect<double> newSize = _painter->getSize();
 

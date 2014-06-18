@@ -118,7 +118,7 @@ ConnectedComponent::operator<(const ConnectedComponent& other) const {
 }
 
 ConnectedComponent
-ConnectedComponent::translate(const util::point<unsigned int>& pt)
+ConnectedComponent::translate(const util::point<int>& pt)
 {
 	boost::shared_ptr<pixel_list_type> translation = boost::make_shared<pixel_list_type>();
 	
@@ -187,6 +187,7 @@ ConnectedComponent::operator==(const ConnectedComponent& other) const
 {
 	util::rect<int> thisBound = getBoundingBox();
 	util::rect<int> otherBound = other.getBoundingBox();
+
 	if (thisBound == otherBound && hashValue() == other.hashValue())
 	{
 		// If this bound equals that bound

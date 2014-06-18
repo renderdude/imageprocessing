@@ -99,21 +99,26 @@ public:
 		const util::point<double>& resolution);
 
 	/**
-	 * Reloading of the image.
-	 */
-	virtual void update();
-
-	/**
 	 * Set a color to colorize the image.
 	 */
 	void setColor(float red, float green, float blue);
 
 	/**
-	 * Show the image transparent in the dart areas.
+	 * Show the image transparent in the dark areas.
 	 */
 	void setTransparent(bool transparent);
 
+	/**
+	 * Indicate that the image has changed.
+	 */
+	void reload();
+
 private:
+
+	/**
+	 * Reloading of the image.
+	 */
+	void update();
 
 	/**
 	 * Normalize and re-load image for intensity images.
@@ -246,6 +251,8 @@ ImagePainter<Image, Pointer>::setImage(pointer_type image, boost::shared_mutex* 
 	                         << _image->height() << std::endl;
 
 	setSize(0.0, 0.0, _image->width(), _image->height());
+
+	update();
 }
 
 template <typename Image, typename Pointer>
@@ -534,10 +541,21 @@ ImagePainter<Image, Pointer>::load(const boost::true_type&) {
 			// fire
 			//float h = ((*i) - min)/(max - min);//fmod(static_cast<float>(*i)*M_PI, 1.0);
 
-			float h = fmod(static_cast<float>(*i)*M_PI, 1.0);
-			float s = 0.5 + fmod(static_cast<float>(*i)*M_PI*2, 0.5);
-			float v = (*i == 0 ? 0.0 : 0.75 + fmod(static_cast<float>(*i)*M_PI*3, 0.25));
-			hsvToRgb(h, s, v, pixel[0], pixel[1], pixel[2]);
+			// intensities above one are handled as color indices
+			if (*i >= 1.0) {
+
+				float h = fmod(static_cast<float>(*i)*M_PI, 1.0);
+				float s = 0.5 + fmod(static_cast<float>(*i)*M_PI*2, 0.5);
+				float v = (*i == 0 ? 0.0 : 0.75 + fmod(static_cast<float>(*i)*M_PI*3, 0.25));
+				hsvToRgb(h, s, v, pixel[0], pixel[1], pixel[2]);
+
+			// intensities below 1 are handled as grayscale
+			} else {
+
+				pixel[0] = (*i)*255.0;
+				pixel[1] = (*i)*255.0;
+				pixel[2] = (*i)*255.0;
+			}
 			colorImage.push_back(pixel);
 		}
 
@@ -621,6 +639,8 @@ ImagePainter<Image, Pointer>::setColor(float red, float green, float blue) {
 	_red = red;
 	_green = green;
 	_blue = blue;
+
+	update();
 }
 
 template <typename Image, typename Pointer>
@@ -628,6 +648,15 @@ void
 ImagePainter<Image, Pointer>::setTransparent(bool transparent) {
 
 	_transparent = transparent;
+
+	update();
+}
+
+template <typename Image, typename Pointer>
+void
+ImagePainter<Image, Pointer>::reload() {
+
+	update();
 }
 
 } // namespace gui

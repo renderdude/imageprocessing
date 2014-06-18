@@ -10,7 +10,7 @@ ImageExtractor::ImageExtractor() {
 
 	registerInput(_stack, "stack");
 
-	_stack.registerBackwardCallback(&ImageExtractor::onInputSet, this);
+	_stack.registerCallback(&ImageExtractor::onInputSet, this);
 }
 
 void
@@ -26,15 +26,6 @@ ImageExtractor::onInputSet(const pipeline::InputSetBase&) {
 	for (unsigned int i = 0; i < _stack->size(); i++) {
 
 		LOG_ALL(imageextractorlog) << "(re)setting output " << i << std::endl;
-
-		if (_images[i]) {
-
-			LOG_ALL(imageextractorlog) << "image was " << _images[i]->width() << "x" << _images[i]->height() << std::endl;
-
-		} else {
-
-			LOG_ALL(imageextractorlog) << "image was unset" << std::endl;
-		}
 
 		_images[i] = (*_stack)[i];
 

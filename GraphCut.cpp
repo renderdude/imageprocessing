@@ -6,8 +6,8 @@
 logger::LogChannel graphcutlog("graphcutlog", "[GraphCut] ");
 
 GraphCut::GraphCut() :
-		_segmentation(boost::make_shared<Image>()),
-		_energy(boost::make_shared<double>(0)),
+		_segmentation(new Image()),
+		_energy(new double(0)),
 		_graph(0, 0),
 		_imageChanged(true),
 		_gcParametersChanged(true),
@@ -18,15 +18,15 @@ GraphCut::GraphCut() :
 
 	registerInput(_image,"image");
 	registerInput(_parameters,"parameters");
-	registerInput(_pottsImage, "potts image");
+	registerInput(_pottsImage, "potts image", pipeline::Optional);
 
 	registerOutput(_segmentation, "segmentation");
 	registerOutput(_energy, "energy");
 
 	// register for input modification signals
-	_image.registerBackwardCallback(&GraphCut::onModifiedImage, this);
-	_parameters.registerBackwardCallback(&GraphCut::onModifiedGCParameters, this);
-	_pottsImage.registerBackwardCallback(&GraphCut::onModifiedPottsImage, this);
+	_image.registerCallback(&GraphCut::onModifiedImage, this);
+	_parameters.registerCallback(&GraphCut::onModifiedGCParameters, this);
+	_pottsImage.registerCallback(&GraphCut::onModifiedPottsImage, this);
 }
 
 void
@@ -279,7 +279,7 @@ double GraphCut::getPairwiseCosts(int x1, int y1, int x2, int y2){
 	double pottsTerm    = _parameters->pottsWeight/dist;
 	double contrastTerm = 0.0;
 
-	if (_pottsImage) {
+	if (_pottsImage.isSet()) {
 
 		double g = (*_pottsImage)(x1, y1) - (*_pottsImage)(x2, y2);
 		double e = exp ( -pow(g, 2) / (2.0 * pow(_parameters->contrastSigma, 2)));
