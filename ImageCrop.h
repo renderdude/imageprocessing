@@ -25,7 +25,7 @@ private:
 
 	void updateOutputs() {
 
-		_cropped->reshape(*_width, *_height);
+		_cropped = new Image(*_width, *_height);
 
 		Image::difference_type upperLeft(*_x, *_y);
 		Image::difference_type lowerRight(*_x + *_width, *_y + *_height);
