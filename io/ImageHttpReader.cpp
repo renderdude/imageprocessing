@@ -33,7 +33,8 @@ ImageHttpReader::readImage()
     Magick::PixelPacket *pixels;
     // Get the size of the image.
     int w = image.columns(), h = image.rows();
-    // We'll push the image values to this in a second.
+
+	// allocate output image
 	_image->reshape(w, h);
     
     LOG_DEBUG(imagehttpreaderlog) << "Image is size " << w << " by " << h << std::endl;

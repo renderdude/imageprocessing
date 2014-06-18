@@ -12,8 +12,8 @@ ImageBlockStackReader::ImageBlockStackReader()
 	registerInput(_block, "block");
 	registerInput(_blockFactory, "factory");
 	
-	_block.registerBackwardCallback(&ImageBlockStackReader::onBlockModified, this);
-	_blockFactory.registerBackwardCallback(&ImageBlockStackReader::onFactoryModified, this);
+	_block.registerCallback(&ImageBlockStackReader::onBlockModified, this);
+	_blockFactory.registerCallback(&ImageBlockStackReader::onFactoryModified, this);
 	
 	// expose the result of the stack assembler
 	registerOutput(_stackAssembler->getOutput(), "stack");
@@ -63,7 +63,7 @@ ImageBlockStackReader::onFactoryModified(const pipeline::InputSetBase& )
 void
 ImageBlockStackReader::setup()
 {
-	if (_block && _blockFactory)
+	if (_block.isSet() && _blockFactory.isSet())
 	{
 		int minZ = _block->location().z;
 		int maxZ = minZ + _block->size().z;

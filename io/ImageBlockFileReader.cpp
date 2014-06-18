@@ -32,6 +32,8 @@ ImageBlockFileReader::readImage()
 
 	LOG_DEBUG(imageblockfilereaderlog) << "Getting cropped output" << std::endl;
     cropped = _imageCrop->getOutput("cropped image");
+
+	_image = new Image();
    
 	LOG_DEBUG(imageblockfilereaderlog) << "Pointer magic" << std::endl;
     *_image = *cropped;
