@@ -35,7 +35,7 @@ ImageHttpReader::readImage()
     int w = image.columns(), h = image.rows();
 
 	// allocate output image
-	_image->reshape(w, h);
+	_image = new Image(w, h);
     
     LOG_DEBUG(imagehttpreaderlog) << "Image is size " << w << " by " << h << std::endl;
     
