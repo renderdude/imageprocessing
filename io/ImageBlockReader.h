@@ -2,7 +2,7 @@
 #define IMAGE_BLOCK_READER_H__
 
 #include "ImageReader.h"
-#include <sopnet/sopnet/block/Box.h>
+#include <util/Box.h>
 #include <pipeline/all.h>
 
 class ImageBlockReader : public ImageReader {
