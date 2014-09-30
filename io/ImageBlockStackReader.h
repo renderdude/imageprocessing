@@ -9,8 +9,8 @@
 #include <pipeline/all.h>
 #include <imageprocessing/Image.h>
 #include <imageprocessing/ImageStack.h>
-#include <util/Box.h>
 #include <imageprocessing/io/ImageBlockFactory.h>
+#include <util/box.hpp>
 
 class ImageBlockStackReader : public pipeline::ProcessNode
 {
@@ -46,7 +46,7 @@ private:
 	
 	boost::shared_ptr<StackAssembler> _stackAssembler;
 	
-	pipeline::Input<Box<unsigned int> > _block;
+	pipeline::Input<util::box<unsigned int> > _block;
 	pipeline::Input<ImageBlockFactory> _blockFactory;
 };
 
