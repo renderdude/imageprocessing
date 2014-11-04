@@ -125,10 +125,14 @@ private:
 
 	// a binary map of the size of the bounding box to indicate which pixels
 	// belong to this component
-	bitmap_type _bitmap;
+	mutable bitmap_type _bitmap;
+
+	mutable bool _bitmapDirty;
 	
 	// the cached hash value of this ConnectedComponent.
-	std::size_t _hashValue;
+	mutable std::size_t _hashValue;
+
+	mutable bool _hashDirty;
 };
 
 inline std::size_t hash_value(const ConnectedComponent& component)

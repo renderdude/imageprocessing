@@ -22,7 +22,9 @@ ConnectedComponent::ConnectedComponent(
 	_source(source),
 	_begin(_pixels->begin() + begin),
 	_end(_pixels->begin() + end),
-	_hashValue(0) {
+	_bitmapDirty(true),
+	_hashValue(0),
+	_hashDirty(true) {
 
 	// if there is at least one pixel
 	if (begin != end) {
@@ -44,29 +46,6 @@ ConnectedComponent::ConnectedComponent(
 	}
 
 	_center /= getSize();
-
-	_bitmap.reshape(bitmap_type::size_type(_boundingBox.width(), _boundingBox.height()), false);
-
-	foreach (const util::point<int>& pixel, getPixels())
-		_bitmap(pixel.x - _boundingBox.minX, pixel.y - _boundingBox.minY) = true;
-	
-	// Calculate geometric hash value
-	boost::hash_combine(_hashValue, boost::hash_value(_boundingBox.minX));
-	boost::hash_combine(_hashValue, boost::hash_value(_boundingBox.minY));
-	boost::hash_combine(_hashValue, boost::hash_value(_boundingBox.maxX));
-	boost::hash_combine(_hashValue, boost::hash_value(_boundingBox.maxY));
-	
-	for (int x = 0; x < _bitmap.width(); ++x)
-	{
-		for (int y = 0; y < _bitmap.height(); ++y)
-		{
-			if (_bitmap(x, y))
-			{
-				boost::hash_combine(_hashValue, boost::hash_value(x + _boundingBox.minX));
-				boost::hash_combine(_hashValue, boost::hash_value(y + _boundingBox.minY));
-			}
-		}
-	}
 }
 
 double
@@ -108,6 +87,16 @@ ConnectedComponent::getBoundingBox() const {
 const ConnectedComponent::bitmap_type&
 ConnectedComponent::getBitmap() const {
 
+	if (_bitmapDirty) {
+
+		_bitmap.reshape(bitmap_type::size_type(_boundingBox.width(), _boundingBox.height()), false);
+
+		foreach (const util::point<int>& pixel, getPixels())
+			_bitmap(pixel.x - _boundingBox.minX, pixel.y - _boundingBox.minY) = true;
+
+		_bitmapDirty = false;
+	}
+
 	return _bitmap;
 }
 
@@ -136,7 +125,7 @@ ConnectedComponent::intersect(const ConnectedComponent& other) {
 
 	boost::shared_ptr<pixel_list_type> intersection = boost::make_shared<pixel_list_type>();
 
-	bitmap_type::size_type size = _bitmap.shape();
+	bitmap_type::size_type size = getBitmap().shape();
 
 	foreach (const util::point<unsigned int>& pixel, other.getPixels())
 		if (_boundingBox.contains(pixel)) {
@@ -158,7 +147,7 @@ bool ConnectedComponent::intersects(const ConnectedComponent& other)
 {
 	if (_boundingBox.intersects(other.getBoundingBox()))
 	{
-		bitmap_type::size_type size = _bitmap.shape();
+		bitmap_type::size_type size = getBitmap().shape();
 
 		foreach (const util::point<unsigned int>& pixel, other.getPixels())
 		{
@@ -225,5 +214,28 @@ ConnectedComponent::operator==(const ConnectedComponent& other) const
 std::size_t
 ConnectedComponent::hashValue() const
 {
+	if (_hashDirty) {
+		// Calculate geometric hash value
+		boost::hash_combine(_hashValue, boost::hash_value(_boundingBox.minX));
+		boost::hash_combine(_hashValue, boost::hash_value(_boundingBox.minY));
+		boost::hash_combine(_hashValue, boost::hash_value(_boundingBox.maxX));
+		boost::hash_combine(_hashValue, boost::hash_value(_boundingBox.maxY));
+
+		const bitmap_type thisBitmap = getBitmap();
+		for (int x = 0; x < thisBitmap.width(); ++x)
+		{
+			for (int y = 0; y < thisBitmap.height(); ++y)
+			{
+				if (thisBitmap(x, y))
+				{
+					boost::hash_combine(_hashValue, boost::hash_value(x + _boundingBox.minX));
+					boost::hash_combine(_hashValue, boost::hash_value(y + _boundingBox.minY));
+				}
+			}
+		}
+
+		_hashDirty = false;
+	}
+
 	return _hashValue;
 }
